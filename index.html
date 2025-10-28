@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discover Your City</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Login Page -->
+  <div id="loginPage" class="login-page">
+    <div class="container">
+      <div class="login-container">
+        <div class="login-logo">
+          <i class="fas fa-map-marker-alt"></i>
+          <h1>Discover Your City</h1>
+        </div>
+        <form class="login-form" id="loginForm">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+          </div>
+          <button type="submit" class="login-btn">Sign In</button>
+          <div class="login-options">
+            <a href="#">Forgot Password?</a>
+            <a href="#" id="goToSignup">Sign Up</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signup Page (cleaned, no duplicates) -->
+  <div id="signupPage" class="login-page" style="display: none;">
+    <div class="container">
+      <div class="login-container">
+        <div class="login-logo">
+          <i class="fas fa-user-plus"></i>
+          <h1>Create Account</h1>
+        </div>
+        <form class="login-form" id="signupForm">
+          <div class="form-group">
+            <label for="signupName">Name</label>
+            <input type="text" id="signupName" placeholder="Enter your name" required>
+          </div>
+          <div class="form-group">
+            <label for="signupEmail">Email</label>
+            <input type="email" id="signupEmail" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" placeholder="Create a password" required>
+          </div>
+          <div class="form-group">
+            <label for="signupConfirm">Confirm Password</label>
+            <input type="password" id="signupConfirm" placeholder="Confirm your password" required>
+          </div>
+          <div class="form-group">
+            <label for="signupLanguage">Language</label>
+            <select id="signupLanguage">
+              <option value="en">English</option>
+              <option value="ro">Română</option>
+            </select>
+          </div>
+          <button type="submit" class="login-btn">Create Account</button>
+          <div class="login-options">
+            <span></span>
+            <a href="#" id="goToLogin">Already have an account? Sign In</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Location Prompt Modal -->
+  <div class="location-prompt" id="locationPrompt" style="display: none;">
+    <div class="location-modal">
+      <h2>Discover Your City</h2>
+      <p>Let us know your location to show you the best events and discoveries near you!</p>
+      <div class="location-buttons">
+        <button class="location-btn allow-btn" id="allowLocation">Use Current Location</button>
+        <button class="location-btn manual-btn" id="manualLocation">Enter Manually</button>
+      </div>
+      <div class="manual-input" id="manualInput">
+        <input type="text" id="cityInput" placeholder="Enter your city name">
+        <button class="location-btn allow-btn" id="submitCity">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App (hidden initially) -->
+  <div id="mainApp" style="display: none;">
+    <!-- Header -->
+    <header class="header">
+      <div class="container">
+        <div class="header-content">
+          <div class="app-title">
+            <div class="app-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <span>Discover City</span>
+          </div>
+          <div class="header-actions">
+            <button class="header-btn" id="notificationsBtn">
+              <i class="fas fa-bell"></i>
+              <span class="notification-badge"></span>
+            </button>
+            <div class="profile-avatar" id="profileAvatar"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container main-content">
+      <!-- Feed View -->
+      <div id="feedView" class="view active">
+        <div class="location-banner" id="locationBanner">
+          Exploring <span id="cityName">Your City</span>
+        </div>
+        <div class="search-container">
+          <div style="position: relative;">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search events, places...">
+          </div>
+          <div class="categories">
+            <button class="category-btn active" data-category="all">For You</button>
+          </div>
+        </div>
+
+        <div id="postsContainer">
+          <!-- Posts will be inserted here by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Sales View -->
+      <div id="salesView" class="view">
+        <div class="location-banner">
+          Sales in <span id="salesCityName">Your City</span>
+        </div>
+        <div class="search-container">
+          <div style="position: relative;">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search products, services...">
+          </div>
+        </div>
+        <div id="salesContainer">
+          <!-- Sales posts will be inserted here by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Map View -->
+      <div id="mapView" class="view">
+        <div class="location-banner" id="mapLocationBanner">
+          Exploring <span id="mapCityName">Your City</span>
+        </div>
+        <div id="openStreetMap" style="height: 400px; width: 100%; border-radius: 16px; margin-bottom: 16px; background: var(--gray-200);"></div>
+        <div id="mapPostsContainer">
+          <!-- Map posts will be inserted here by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Notifications View -->
+      <div id="notificationsView" class="view">
+        <div class="location-banner">
+          Exploring <span id="notifCityName">Your City</span>
+        </div>
+        <div id="notificationsContainer">
+          <!-- Notifications will be inserted here by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Users View -->
+      <div id="usersView" class="view">
+        <div class="location-banner">
+          Exploring <span id="usersCityName">Your City</span>
+        </div>
+        <div class="users-header">
+          <h2 class="users-title">Find People</h2>
+        </div>
+        <div class="search-users">
+          <i class="fas fa-search"></i>
+          <input type="text" id="userSearchInput" placeholder="Search for users...">
+        </div>
+        <div id="usersContainer">
+          <!-- Users will be inserted here by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Profile View -->
+      <div id="profileView" class="view">
+        <div class="profile-card">
+          <div class="profile-avatar-large" id="profileAvatarLarge"></div>
+          <h2 class="profile-name" id="profileNameText"></h2>
+          <p class="profile-level"></p>
+          
+          <div class="profile-stats">
+            <div class="stat-item">
+              <div class="stat-value points" id="pointsValue">0</div>
+              <div class="stat-label">Points</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value streak" id="streakValue">0</div>
+              <div class="stat-label">Day Streak</div>
+            </div>
+          </div>
+          
+          <div class="badges" id="badgesContainer">
+            <!-- No badges yet -->
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <h3 class="section-title">My Posts</h3>
+          <p class="section-text" id="myPostsCounts">0 events • 0 discoveries • 0 challenges</p>
+        </div>
+        <div class="profile-section">
+          <h3 class="section-title">Friends</h3>
+          <p class="section-text" id="friendsCounts"><span id="followersCount">0</span> followers • <span id="followingCount">0</span> following</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" data-view="feed">
+        <i class="fas fa-home"></i>
+        <span>Feed</span>
+      </div>
+      <div class="nav-item" data-view="sales">
+        <i class="fas fa-tag"></i>
+        <span>Sales</span>
+      </div>
+      <div class="add-btn" id="addPostBtn">
+        <i class="fas fa-plus"></i>
+      </div>
+      <div class="nav-item" data-view="notifications">
+        <i class="fas fa-bell"></i>
+        <span>Alerts</span>
+      </div>
+      <div class="nav-item" data-view="profile">
+        <i class="fas fa-user"></i>
+        <span>Profile</span>
+      </div>
+    </nav>
+
+    <!-- Post Modal -->
+    <div class="modal-overlay" id="postModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">Create Post</h2>
+          <button class="close-btn" id="closeModal">&times;</button>
+        </div>
+        <div class="modal-content" id="modalContent">
+          <!-- Post type selection and form will be inserted here by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div class="modal-overlay" id="userProfileModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title" id="userProfileName">User Profile</h2>
+          <button class="close-btn" id="closeUserProfile">&times;</button>
+        </div>
+        <div class="modal-content" id="userProfileContent">
+          <!-- User profile content will be here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Modal -->
+    <div class="modal-overlay" id="accountModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">Account Settings</h2>
+          <button class="close-btn" id="closeAccountModal">&times;</button>
+        </div>
+        <div class="modal-content">
+          <div class="account-section">
+            <h3>Profile</h3>
+            <p><strong>Name:</strong> <span id="accountName"></span></p>
+            <p><strong>Email:</strong> <span id="accountEmail"></span></p>
+            <p><strong>Member since:</strong> <span id="accountMemberSince">January 2024</span></p>
+          </div>
+          <div class="account-section">
+            <h3>Preferences</h3>
+            <div class="theme-toggle">
+              <span>Dark Mode</span>
+              <label class="theme-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="account-section">
+            <h3>Privacy</h3>
+            <p><span>Location sharing:</span> <span>Enabled</span></p>
+            <p><span>Notifications:</span> <span>Enabled</span></p>
+          </div>
+          <button class="logout-btn" id="logoutBtn">Log Out</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div class="modal-overlay" id="notificationsModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">Notifications</h2>
+          <button class="close-btn" id="closeNotificationsModal">&times;</button>
+        </div>
+        <div class="modal-content" id="notificationsModalContent">
+          <!-- Notifications content will be here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OpenStreetMap JavaScript -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
