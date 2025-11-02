@@ -78,18 +78,14 @@
     </div>
   </div>
 
-  <!-- Location Prompt Modal -->
+  <!-- City Picker Modal -->
   <div class="location-prompt" id="locationPrompt" style="display: none;">
     <div class="location-modal">
-      <h2>Discover Your City</h2>
-      <p>Let us know your location to show you the best events and discoveries near you!</p>
+      <h2>Selectează orașul</h2>
+      <p>Alege unul dintre orașele disponibile pentru a vedea conținutul local.</p>
       <div class="location-buttons">
-        <button class="location-btn allow-btn" id="allowLocation">Use Current Location</button>
-        <button class="location-btn manual-btn" id="manualLocation">Enter Manually</button>
-      </div>
-      <div class="manual-input" id="manualInput">
-        <input type="text" id="cityInput" placeholder="Enter your city name">
-        <button class="location-btn allow-btn" id="submitCity">Continue</button>
+        <button class="location-btn city-option" data-city="Chișinău">Chișinău</button>
+        <button class="location-btn city-option" data-city="Ştefan Vodă">Ştefan Vodă</button>
       </div>
     </div>
   </div>
@@ -127,7 +123,7 @@
         <div class="search-container">
           <div style="position: relative;">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" class="search-input" placeholder="Search events, places...">
+            <input type="text" class="search-input" placeholder="Search for people">
           </div>
           <div class="categories">
             <button class="category-btn active" data-category="all">For You</button>
@@ -218,7 +214,7 @@
 
         <div class="profile-section">
           <h3 class="section-title">My Posts</h3>
-          <p class="section-text" id="myPostsCounts">0 events • 0 discoveries • 0 challenges</p>
+          <p class="section-text" id="myPostsCounts">0 posts </p>
         </div>
         <div class="profile-section">
           <h3 class="section-title">Friends</h3>
@@ -241,7 +237,7 @@
         <i class="fas fa-plus"></i>
       </div>
       <div class="nav-item" data-view="notifications">
-        <i class="fas fa-bell"></i>
+        <i class="fas fa-clapperboard"></i>
         <span>Alerts</span>
       </div>
       <div class="nav-item" data-view="profile">
@@ -326,6 +322,14 @@
 
   <!-- OpenStreetMap JavaScript -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+  window.API_BASE = "https://shop-market-variable-blades.trycloudflare.com";
+  const _fetch = window.fetch.bind(window);
+  window.fetch = (input, init) => {
+    const url = (typeof input === "string" && input.startsWith("/api")) ? window.API_BASE + input : input;
+    return _fetch(url, init);
+  };
+</script>
   <script src="app.js"></script>
 </body>
 </html>
